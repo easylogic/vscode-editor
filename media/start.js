@@ -23,15 +23,20 @@
         container,
 		plugins: [
 			function (editor) {
-				editor.on('refreshHistory', () => {
-					vscode.postMessage({
-						type: 'modify',
-						projects: editor.makeResource(editor.projects)
-					});
+				editor.on('refreshHistory', (commandName) => {
+					// 객체 선택은 제외함 
+					if (commandName.includes('refreshSelection') !== false) {
+						vscode.postMessage({
+							type: 'modify',
+							projects: editor.makeResource(editor.projects)
+						});
+					}
 				})
 			}
 		]
     })
+
+	vscode.postMessage({type: 'initialized'});
 
 	/**
 	 * Render the document in the webview.

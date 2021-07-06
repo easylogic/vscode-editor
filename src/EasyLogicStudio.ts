@@ -61,9 +61,10 @@ export class EasyLogicStudioProvider implements vscode.CustomTextEditorProvider 
 		// editors (this happens for example when you split a custom editor)
 
 		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
-			if (e.document.uri.toString() === document.uri.toString()) {
-				updateWebview();
-			}
+			console.log('changed document');
+			// if (e.document.uri.toString() === document.uri.toString()) {
+			// 	updateWebview();
+			// }
 		});
 
 		// Make sure we get rid of the listener when our editor is closed.
@@ -77,14 +78,11 @@ export class EasyLogicStudioProvider implements vscode.CustomTextEditorProvider 
 				case 'modify':
 					this.updateEasyLogic(document, e.projects);
 					return;
-
-				// case 'delete':
-				// 	this.deleteEasyLogic(document, e.id);
-				// 	return;
+				case 'initialized':
+					updateWebview();
+					return;
 			}
 		});
-
-		updateWebview();
 	}
 
 	/**

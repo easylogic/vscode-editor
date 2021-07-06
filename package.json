@@ -2,7 +2,7 @@
 	"name": "easylogic-studio",
 	"displayName": "EasyLogic Studio",
 	"description": "Fantastic Web Design Tool",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "easylogic",
 	"private": true,
 	"license": "MIT",

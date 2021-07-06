@@ -38,7 +38,6 @@ class EasyLogicStudioProvider {
         };
         webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
         function updateWebview() {
-            console.log("update");
             webviewPanel.webview.postMessage({
                 type: 'update',
                 text: document.getText(),
@@ -52,7 +51,6 @@ class EasyLogicStudioProvider {
         // Remember that a single text document can also be shared between multiple custom
         // editors (this happens for example when you split a custom editor)
         const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
-            console.log(e.document.uri.toString(), document.uri.toString())
             if (e.document.uri.toString() === document.uri.toString()) {
                 updateWebview();
             }
@@ -63,15 +61,14 @@ class EasyLogicStudioProvider {
         });
         // Receive message from the webview.
         webviewPanel.webview.onDidReceiveMessage(e => {
-            console.log("웹뷰에서 메세지 보내서 실행하기", e);
-            // switch (e.type) {
-            // 	case 'add':
-            // 		this.addNewEasyLogic(document);
-            // 		return;
-            // 	case 'delete':
-            // 		this.deleteEasyLogic(document, e.id);
-            // 		return;
-            // }
+            switch (e.type) {
+                case 'modify':
+                    this.updateEasyLogic(document, e.projects);
+                    return;
+                // case 'delete':
+                // 	this.deleteEasyLogic(document, e.id);
+                // 	return;
+            }
         });
         updateWebview();
     }
@@ -95,13 +92,13 @@ class EasyLogicStudioProvider {
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 				-->
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource}; style-src ${webview.cspSource} 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'nonce-${nonce}' 'self' 'unsafe-inline' 'unsafe-eval';">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data: ; style-src ${webview.cspSource}  'self' 'unsafe-inline' 'unsafe-eval'; script-src 'nonce-${nonce}'  'self' 'unsafe-inline' 'unsafe-eval';">
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 				<link href="${styleMainUri}" rel="stylesheet" />
 
-				<title>EasyLogic</title>
+				<title>EasyLogic</title> 
 			</head>
 			<body>
 				<div id="app">
@@ -117,6 +114,14 @@ class EasyLogicStudioProvider {
      */
     addNewEasyLogic(document) {
         const json = this.getDocumentAsJson(document);
+        return this.updateTextDocument(document, json);
+    }
+    /**
+     * Add a new scratch to the current document.
+     */
+    updateEasyLogic(document, projects) {
+        const json = this.getDocumentAsJson(document);
+        json.projects = JSON.parse(projects);
         return this.updateTextDocument(document, json);
     }
     /**

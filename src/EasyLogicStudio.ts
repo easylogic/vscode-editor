@@ -73,16 +73,15 @@ export class EasyLogicStudioProvider implements vscode.CustomTextEditorProvider 
 
 		// Receive message from the webview.
 		webviewPanel.webview.onDidReceiveMessage(e => {
-			console.log("웹뷰에서 메세지 보내서 실행하기", e);
-			// switch (e.type) {
-			// 	case 'add':
-			// 		this.addNewEasyLogic(document);
-			// 		return;
+			switch (e.type) {
+				case 'modify':
+					this.updateEasyLogic(document, e.projects);
+					return;
 
-			// 	case 'delete':
-			// 		this.deleteEasyLogic(document, e.id);
-			// 		return;
-			// }
+				// case 'delete':
+				// 	this.deleteEasyLogic(document, e.id);
+				// 	return;
+			}
 		});
 
 		updateWebview();
@@ -110,13 +109,13 @@ export class EasyLogicStudioProvider implements vscode.CustomTextEditorProvider 
 				Use a content security policy to only allow loading images from https or from our extension directory,
 				and only allow scripts that have a specific nonce.
 				-->
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data: ; style-src ${webview.cspSource}  'self' 'unsafe-inline' 'unsafe-eval'; script-src 'nonce-${nonce}'  'self' 'unsafe-inline' 'unsafe-eval';">
 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 				<link href="${styleMainUri}" rel="stylesheet" />
 
-				<title>EasyLogic</title>
+				<title>EasyLogic</title> 
 			</head>
 			<body>
 				<div id="app">
@@ -136,6 +135,17 @@ export class EasyLogicStudioProvider implements vscode.CustomTextEditorProvider 
 
 		return this.updateTextDocument(document, json);
 	}
+
+	/**
+	 * Add a new scratch to the current document.
+	 */
+	 private updateEasyLogic(document: vscode.TextDocument, projects: any) {
+		const json = this.getDocumentAsJson(document);
+
+		json.projects = JSON.parse(projects);
+
+		return this.updateTextDocument(document, json);
+	}	
 
 	/**
 	 * Delete an existing scratch from a document.

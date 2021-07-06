@@ -19,3 +19,11 @@ Demonstrates VS Code's [custom editor API](https://code.visualstudio.com/api/ext
 - `F5` to start debugging
 
 Open the example files from the `exampleFiles` directory.
+
+
+## Update easylogic studio code 
+
+```sh
+git clone https://github.com/easylogic/editor 
+cp -R ./editor/vscode/* ./media/
+```

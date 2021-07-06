@@ -20,7 +20,17 @@
 
     // @ts-ignore
     const localEditorInstance = editor.createDesignEditor({
-        container
+        container,
+		plugins: [
+			function (editor) {
+				editor.on('refreshHistory', () => {
+					vscode.postMessage({
+						type: 'modify',
+						projects: editor.makeResource(editor.projects)
+					});
+				})
+			}
+		]
     })
 
 	/**
@@ -42,7 +52,6 @@
 	// Handle messages sent from the extension to the webview
 	window.addEventListener('message', event => {
 		const message = event.data; // The json data that the extension sent
-        console.log(event, message);
 		switch (message.type) {
 			case 'update':
 				const text = message.text;

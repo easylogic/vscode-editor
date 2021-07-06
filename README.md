@@ -1,6 +1,10 @@
-# VSCode Custom Editor for EasyLogic Studio
+# EasyLogic Studio VS Code Extension
 
-Demonstrates VS Code's [custom editor API](https://code.visualstudio.com/api/extension-guides/custom-editors) using two custom editors:
+
+## Features
+
+-   Edit `.els` file in the EasyLogic Studio.
+-   To create a new design, simply create an empty `*.els` file and open it.
 
 
 ## VS Code API

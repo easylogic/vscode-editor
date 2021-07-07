@@ -2,7 +2,7 @@
 	"name": "easylogic-studio",
 	"displayName": "EasyLogic Studio",
 	"description": "Fantastic Web Design Tool",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"icon": "icon.png",
 	"publisher": "easylogic",
 	"private": true,
